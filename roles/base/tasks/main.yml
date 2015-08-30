@@ -1,0 +1,72 @@
+---
+- name: add Atom PPA
+  apt_repository: repo='ppa:webupd8team/atom'
+  sudo: yes
+
+- name: add Gradle PPA
+  apt_repository: repo='ppa:cwchien/gradle'
+  sudo: yes
+
+- name: add OpenJDK 8 PPA
+  apt_repository: repo='ppa:openjdk-r/ppa'
+  sudo: yes
+
+- name: install base development packages
+  apt: name={{item}} update_cache=yes state=present
+  sudo: yes
+  with_items:
+    - atom
+    - curl
+    - git
+    - chromium-browser
+    - gradle
+    - openjdk-8-jdk
+    - tar
+    - unzip
+    - wget
+
+- name: Download IntelliJ IDEA
+  get_url:
+    url: http://download.jetbrains.com/idea/ideaIU-14.1.4.tar.gz
+    force: no
+    dest: /tmp/ideaIU-14.1.4.tar.gz
+
+- name: Ensure IDEA installation directory
+  file:
+    state: directory
+    mode: 0775
+    dest: /opt/intellij
+  sudo: yes
+
+- name: Install IDEA
+  unarchive:
+    copy: no
+    src: /tmp/ideaIU-14.1.4.tar.gz
+    dest: /opt/intellij/
+  sudo: yes
+
+- name: Checking for Docker
+  stat:
+    path: /usr/bin/docker
+  register: docker_stat
+
+- name: Install Docker
+  shell: wget -qO- https://get.docker.com/ | sh
+  when: not docker_stat.stat.exists
+  sudo: yes
+
+- name: Checking for Docker Compose
+  stat:
+    path: /usr/local/bin/docker-compose
+  register: docker_compose_stat
+
+- name: Install Docker Compose
+  shell: curl -L https://github.com/docker/compose/releases/download/1.4.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+  sudo: yes
+  when: not docker_compose_stat.stat.exists
+
+- name: Make Docker Compose executable
+  file:
+    path: /usr/local/bin/docker-compose
+    mode: 0755
+  sudo: yes
