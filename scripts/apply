@@ -1,0 +1,4 @@
+# Change current working directory to the directory contains this script
+cd "$( dirname "${BASH_SOURCE[0]}" )"
+
+ansible-playbook -i ../inventory/production ../site.yml --ask-sudo
