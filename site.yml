@@ -2,4 +2,3 @@
 - hosts: devbox
   roles:
   - base
-  - vm

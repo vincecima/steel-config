@@ -1,1 +1,2 @@
-`ansible-playbook -i inventory/production site.yml --ask-sudo`
+`script/bootstrap`
+`script/apply`

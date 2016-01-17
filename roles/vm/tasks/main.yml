@@ -1,4 +1,0 @@
----
-- name: install OpenVM Tools
-  apt: name=open-vm-tools-desktop update_cache=yes state=present
-  sudo: yes

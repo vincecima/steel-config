@@ -1,19 +1,19 @@
 ---
 - name: add Atom PPA
   apt_repository: repo='ppa:webupd8team/atom'
-  sudo: yes
+  become: true
 
 - name: add Gradle PPA
   apt_repository: repo='ppa:cwchien/gradle'
-  sudo: yes
+  become: true
 
 - name: add OpenJDK 8 PPA
   apt_repository: repo='ppa:openjdk-r/ppa'
-  sudo: yes
+  become: true
 
 - name: install base development packages
   apt: name={{item}} update_cache=yes state=present
-  sudo: yes
+  become: true
   with_items:
     - atom
     - curl
@@ -27,23 +27,23 @@
 
 - name: Download IntelliJ IDEA
   get_url:
-    url: http://download.jetbrains.com/idea/ideaIU-14.1.4.tar.gz
+    url: http://download.jetbrains.com/idea/ideaIU-15.0.2.tar.gz
     force: no
-    dest: /tmp/ideaIU-14.1.4.tar.gz
+    dest: /tmp/ideaIU-15.0.2.tar.gz
 
 - name: Ensure IDEA installation directory
   file:
     state: directory
     mode: 0775
     dest: /opt/intellij
-  sudo: yes
+  become: true
 
 - name: Install IDEA
   unarchive:
     copy: no
-    src: /tmp/ideaIU-14.1.4.tar.gz
+    src: /tmp/ideaIU-15.0.2.tar.gz
     dest: /opt/intellij/
-  sudo: yes
+  become: true
 
 - name: Checking for Docker
   stat:
@@ -53,7 +53,7 @@
 - name: Install Docker
   shell: wget -qO- https://get.docker.com/ | sh
   when: not docker_stat.stat.exists
-  sudo: yes
+  become: true
 
 - name: Checking for Docker Compose
   stat:
@@ -69,4 +69,4 @@
   file:
     path: /usr/local/bin/docker-compose
     mode: 0755
-  sudo: yes
+  become: true
