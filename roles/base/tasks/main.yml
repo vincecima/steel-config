@@ -70,3 +70,31 @@
     path: /usr/local/bin/docker-compose
     mode: 0755
   become: true
+
+- name: Add GitHub.com to known_hosts
+  shell: ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts
+  sudo: yes
+
+- name: Fix permissions for all SSH keys
+  file:
+    path: /home/{{ansible_user_id}}/.ssh/{{item}}
+    mode: 0400
+  with_items:
+    - id_rsa
+    - id_rsa.pub
+
+- name: Ensure Projects directory
+  file:
+    state: directory
+    mode: 0775
+    dest: /home/{{ansible_user_id}}/Projects
+
+- name: Clone projects from GitHub
+  git:
+    dest: /home/{{ansible_user_id}}/Projects
+    repo: '{{item}}'
+  with_items:
+    - git@github.com:vincecima/steel-config.git
+    - git@github.com:vincecima/www.vincecima.com.git
+    - git@github.com:vincecima/how-much-time-left.git
+    - git@github.com:vincecima/systems.git
