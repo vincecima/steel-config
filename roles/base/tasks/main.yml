@@ -62,7 +62,7 @@
 
 - name: Install Docker Compose
   shell: curl -L https://github.com/docker/compose/releases/download/1.4.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-  sudo: yes
+  become: yes
   when: not docker_compose_stat.stat.exists
 
 - name: Make Docker Compose executable
@@ -70,10 +70,6 @@
     path: /usr/local/bin/docker-compose
     mode: 0755
   become: true
-
-- name: Add GitHub.com to known_hosts
-  shell: ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts
-  sudo: yes
 
 - name: Fix permissions for all SSH keys
   file:
@@ -91,10 +87,11 @@
 
 - name: Clone projects from GitHub
   git:
-    dest: /home/{{ansible_user_id}}/Projects
-    repo: '{{item}}'
+    dest: /home/{{ansible_user_id}}/Projects/{{item}}
+    repo: git@github.com:vincecima/{{item}}.git
+    accept_hostkey: yes
   with_items:
-    - git@github.com:vincecima/steel-config.git
-    - git@github.com:vincecima/www.vincecima.com.git
-    - git@github.com:vincecima/how-much-time-left.git
-    - git@github.com:vincecima/systems.git
+    - steel-config
+    - www.vincecima.com
+    - how-much-time-left
+    - systems
