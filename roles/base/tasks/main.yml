@@ -25,6 +25,15 @@
     - unzip
     - wget
 
+- name: copy Dropbox .deb to target
+  copy:
+    src: dropbox_2015.10.28_amd64.deb
+    dest: /tmp/dropbox.deb
+
+- name: Install Dropbox
+  apt: deb=/tmp/dropbox.deb
+  become: true
+
 - name: Download IntelliJ IDEA
   get_url:
     url: http://download.jetbrains.com/idea/ideaIU-15.0.2.tar.gz
