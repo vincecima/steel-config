@@ -34,6 +34,13 @@
   apt: deb=/tmp/dropbox.deb
   become: true
 
+- name: Install productivity packages
+  apt: name={{item}} update_cache=yes state=present
+  become: true
+  with_items:
+    - ledger
+    - hledger
+
 - name: Download IntelliJ IDEA
   get_url:
     url: http://download.jetbrains.com/idea/ideaIU-15.0.2.tar.gz
