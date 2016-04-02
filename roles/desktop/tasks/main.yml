@@ -1,0 +1,27 @@
+---
+- name: install desktop packages
+  apt: name={{item}} update_cache=yes state=present
+  become: true
+  with_items:
+    - hledger
+    - ledger
+    - wget
+    - youtube-dl
+
+- name: copy Dropbox .deb to target
+  copy:
+    src: dropbox_2015.10.28_amd64.deb
+    dest: /tmp/dropbox.deb
+
+- name: Install Dropbox
+  apt: deb=/tmp/dropbox.deb
+  become: true
+
+- name: copy Chrome .deb to target
+  copy:
+    src: google-chrome-stable_current_amd64.deb
+    dest: /tmp/chrome.deb
+
+- name: Install Chrome
+  apt: deb=/tmp/chrome.deb
+  become: true
