@@ -41,26 +41,6 @@
     - ledger
     - hledger
 
-- name: Download IntelliJ IDEA
-  get_url:
-    url: http://download.jetbrains.com/idea/ideaIU-15.0.2.tar.gz
-    force: no
-    dest: /tmp/ideaIU-15.0.2.tar.gz
-
-- name: Ensure IDEA installation directory
-  file:
-    state: directory
-    mode: 0775
-    dest: /opt/intellij
-  become: true
-
-- name: Install IDEA
-  unarchive:
-    copy: no
-    src: /tmp/ideaIU-15.0.2.tar.gz
-    dest: /opt/intellij/
-  become: true
-
 - name: Checking for Docker
   stat:
     path: /usr/bin/docker
