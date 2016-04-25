@@ -25,7 +25,7 @@
 
 - name: Download IntelliJ IDEA
   get_url:
-    url: https://s3.amazonaws.com/com.vincecima.steel/ideaIU-2016.1.1.tar.gz
+    url: https://f001.backblaze.com/file/com-vincecima/packages/ideaIU-2016.1.1.tar.gz
     force: no
     dest: /tmp/ideaIU.tar.gz
 
