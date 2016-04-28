@@ -4,7 +4,6 @@
   become: true
   with_items:
     - hledger
-    - ledger
     - wget
     - youtube-dl
 

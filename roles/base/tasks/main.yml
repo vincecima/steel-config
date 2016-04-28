@@ -6,3 +6,20 @@
   with_items:
     - id_rsa
     - id_rsa.pub
+
+- name: add rcm PPA
+  apt_repository: repo='ppa:martin-frost/thoughtbot-rcm'
+  become: true
+
+- name: install base packages
+  apt: name={{item}} update_cache=yes state=present
+  become: true
+  with_items:
+    - rcm
+
+- name: Clone dotfiles repo
+  git:
+    dest: /home/{{ansible_user_id}}/.dotfiles
+    repo: git@github.com:vincecima/dotfiles.git
+    accept_hostkey: yes
+    update: no
