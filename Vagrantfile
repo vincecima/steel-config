@@ -1,5 +1,5 @@
 Vagrant.configure(2) do |config|
-  config.vm.box = 'https://f001.backblaze.com/file/com-vincecima/vagrant-boxes/u1604.box'
+  config.vm.box = 'boxcutter/ubuntu1604-desktop'
 
   config.vm.provider 'virtualbox' do |vb|
     vb.gui = true
