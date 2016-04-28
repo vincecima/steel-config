@@ -7,6 +7,19 @@
     - id_rsa
     - id_rsa.pub
 
+- name: Add a HOME/bin for commands
+  file:
+    path: /home/{{ansible_user_id}}/bin
+    state: directory
+
+- name: install commands
+  copy:
+    src: bin/{{item}}
+    dest: /home/{{ansible_user_id}}/bin/{{item}}
+    mode: 0744
+  with_items:
+    - hledger-networth
+
 - name: add rcm PPA
   apt_repository: repo='ppa:martin-frost/thoughtbot-rcm'
   become: true
