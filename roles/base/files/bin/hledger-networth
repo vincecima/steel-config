@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+hledger balance ^assets ^liab --depth 1 -M -H "$@"
