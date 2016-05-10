@@ -1,73 +1,25 @@
 ---
-- name: add Atom PPA
-  apt_repository: repo='ppa:webupd8team/atom'
-  become: true
 
-- name: add Gradle PPA
-  apt_repository: repo='ppa:cwchien/gradle'
+- name: add PPAs for packages
+  apt_repository: repo={{item}}
   become: true
-
-- name: add OpenJDK 8 PPA
-  apt_repository: repo='ppa:openjdk-r/ppa'
-  become: true
+  with_items:
+    - ppa:neovim-ppa/unstable
 
 - name: install base development packages
   apt: name={{item}} update_cache=yes state=present
   become: true
   with_items:
-    - atom
     - curl
+    - docker.io
+    - docker-compose
     - git
     - gradle
-    - openjdk-8-jdk
+    - neovim
+    - openjdk-8-jdk-headless
     - tar
+    - tmux
     - unzip
-
-- name: Download IntelliJ IDEA
-  get_url:
-    url: https://f001.backblaze.com/file/com-vincecima/packages/ideaIU-2016.1.1.tar.gz
-    force: no
-    dest: /tmp/ideaIU.tar.gz
-
-- name: Ensure IDEA installation directory
-  file:
-    state: directory
-    mode: 0775
-    dest: /opt/intellij
-  become: true
-
-- name: Install IDEA
-  unarchive:
-    copy: no
-    src: /tmp/ideaIU.tar.gz
-    dest: /opt/intellij/
-  become: true
-
-- name: Checking for Docker
-  stat:
-    path: /usr/bin/docker
-  register: docker_stat
-
-- name: Install Docker
-  shell: wget -qO- https://get.docker.com/ | sh
-  when: not docker_stat.stat.exists
-  become: true
-
-- name: Checking for Docker Compose
-  stat:
-    path: /usr/local/bin/docker-compose
-  register: docker_compose_stat
-
-- name: Install Docker Compose
-  shell: curl -L https://github.com/docker/compose/releases/download/1.4.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-  become: yes
-  when: not docker_compose_stat.stat.exists
-
-- name: Make Docker Compose executable
-  file:
-    path: /usr/local/bin/docker-compose
-    mode: 0755
-  become: true
 
 - name: Ensure Projects directory
   file:

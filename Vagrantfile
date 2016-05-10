@@ -1,15 +1,9 @@
 Vagrant.configure(2) do |config|
-  config.vm.box = 'boxcutter/ubuntu1604-desktop'
+  config.vm.box = 'boxcutter/ubuntu1604'
 
   config.vm.provider 'virtualbox' do |vb|
-    vb.gui = true
     vb.customize ["modifyvm", :id, "--cpus", 2]
-    vb.customize ["modifyvm", :id, "--memory", 8192]
-    vb.customize ["modifyvm", :id, "--vram", 256]
-    vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
-    vb.customize ["setextradata", :id, "GUI/MaxGuestResolution", "any"]
-    vb.customize ["setextradata", :id, "CustomVideoMode1", "1024x768x32"]
-    vb.customize ["modifyvm", :id, "--ioapic", "on"]
+    vb.customize ["modifyvm", :id, "--memory", 4096]
     vb.customize ["modifyvm", :id, "--rtcuseutc", "on"]
     vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
   end
@@ -18,6 +12,7 @@ Vagrant.configure(2) do |config|
     next if ['.','..'].include? item
     config.vm.provision 'file', source: File.join('.', 'keys', item), destination: "~/.ssh/#{item}"
   end
+  config.vm.synced_folder File.join(Dir.home, 'Dropbox'), '/home/vagrant/Dropbox'
 
   config.vm.provision 'shell', inline: '/vagrant/script/bootstrap'
 end

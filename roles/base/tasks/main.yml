@@ -36,3 +36,7 @@
     repo: git@github.com:vincecima/dotfiles.git
     accept_hostkey: yes
     update: no
+
+- name: Activate dotfiles
+  shell: rcup -f
+  changed_when: False
