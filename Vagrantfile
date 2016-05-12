@@ -8,6 +8,9 @@ Vagrant.configure(2) do |config|
     vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
   end
 
+  # Jekyll
+  config.vm.network "forwarded_port", guest: 4000, host: 4000
+
   Dir.foreach('./keys') do |item|
     next if ['.','..'].include? item
     config.vm.provision 'file', source: File.join('.', 'keys', item), destination: "~/.ssh/#{item}"
