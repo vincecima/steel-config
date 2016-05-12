@@ -38,3 +38,31 @@
     - www.vincecima.com
     - how-much-time-left
     - application-config
+
+- name: Install rbenv
+  git:
+    dest: /home/{{ansible_user_id}}/.rbenv
+    repo: https://github.com/rbenv/rbenv.git
+    update: no
+
+- name: Install ruby-build
+  git:
+    dest: /home/{{ansible_user_id}}/.rbenv/plugins/ruby-build
+    repo: https://github.com/rbenv/ruby-build.git
+    update: no
+
+- name: Install ruby build environment
+  apt: name={{item}} update_cache=yes state=present
+  become: true
+  with_items:
+    - autoconf
+    - bison
+    - build-essential
+    - libssl-dev
+    - libyaml-dev
+    - libreadline6-dev
+    - zlib1g-dev
+    - libncurses5-dev
+    - libffi-dev
+    - libgdbm3
+    - libgdbm-dev
