@@ -18,7 +18,6 @@
     - neovim
     - openjdk-8-jdk-headless
     - tar
-    - tmux
     - unzip
 
 - name: Ensure Projects directory
