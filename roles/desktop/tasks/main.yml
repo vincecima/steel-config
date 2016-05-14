@@ -4,3 +4,8 @@
   become: true
   with_items:
     - hledger
+
+- name: Install financial tmux window setup
+  copy:
+    src: financial.window.sh
+    dest: /home/{{ansible_user_id}}/.tmuxifier/layouts/financial.window.sh

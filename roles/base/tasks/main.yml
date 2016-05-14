@@ -47,3 +47,9 @@
     dest: /home/{{ansible_user_id}}/.tmux-sensible
     repo: https://github.com/tmux-plugins/tmux-sensible.git
     update: no
+
+- name: Install Tmuxifier
+  git:
+    dest: /home/{{ansible_user_id}}/.tmuxifier
+    repo: https://github.com/jimeh/tmuxifier.git
+    update: no
