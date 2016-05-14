@@ -6,6 +6,18 @@
   with_items:
     - ppa:neovim-ppa/unstable
 
+- name: add Apt key for packagecloud
+  apt_key:
+    url: https://packagecloud.io/github/git-lfs/gpgkey
+  become: true
+
+- name: add Packagecloud repo
+  apt_repository:
+    repo: "{{item}}"
+  with_items:
+    - 'deb https://packagecloud.io/github/git-lfs/ubuntu/ xenial main'
+    - 'deb-src https://packagecloud.io/github/git-lfs/ubuntu/ xenial main'
+
 - name: install base development packages
   apt: name={{item}} update_cache=yes state=present
   become: true
@@ -14,6 +26,7 @@
     - docker.io
     - docker-compose
     - git
+    - git-lfs
     - gradle
     - neovim
     - openjdk-8-jdk-headless
