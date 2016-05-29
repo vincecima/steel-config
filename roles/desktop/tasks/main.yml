@@ -1,11 +1,36 @@
 ---
 - name: Install desktop packages
-  apt: name={{item}} update_cache=yes state=present
+  package: "{{item}}"
   become: true
   with_items:
     - hledger
+    - youtube-dl
 
-- name: Install financial tmux window setup
+- name: Install hledger custom commands
   copy:
-    src: financial.window.sh
-    dest: /home/{{ansible_user_id}}/.tmuxifier/layouts/financial.window.sh
+    src: "{{item}}"
+    dest: "{{ ansible_env.HOME}}/bin/{{item}}"
+    mode: 0744
+  with_items:
+    - hledger-networth
+
+- name: Install tmuxifier session data
+  copy:
+    src: "{{item}}"
+    dest: "{{ ansible_env.HOME}}/.tmuxifier/layouts/{{item}}"
+  with_items:
+    - financial.window.sh
+    - workstation.session.sh
+
+- name: Install OSX graphical applications
+  homebrew_cask:
+    name: "{{item}}"
+  with_items:
+    - 1password
+    - atom
+    - dropbox
+    - google-chrome
+    - iterm2
+    - slack
+    - spectacle
+    - spotify
