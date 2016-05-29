@@ -1,9 +1,19 @@
 #!/usr/bin/env bash
 
-# Update and get needed packages
-apt-get update
-apt-get upgrade -y
-apt-get install -y ansible git
+if [ "$(uname -s)" == "Linux" ]; then
+  apt-get update
+  apt-get upgrade -y
+  apt-get install -y ansible git
+elif [ "$(uname -s)" == "Darwin" ]; then
+  if type brew &> /dev/null ; then
+    echo "✓ Homebrew installed"
+  else
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  fi
 
-# Fix perms on SSH keys
-chmod 0400 /home/vagrant/.ssh/id*
+  if type ansible &> /dev/null ; then
+    echo "✓ Ansible installed"
+  else
+    brew install ansible
+  fi
+fi
