@@ -1,26 +1,11 @@
 ---
-- name: install desktop packages
+- name: Install desktop packages
   apt: name={{item}} update_cache=yes state=present
   become: true
   with_items:
     - hledger
-    - wget
-    - youtube-dl
 
-- name: copy Dropbox .deb to target
+- name: Install financial tmux window setup
   copy:
-    src: dropbox_2015.10.28_amd64.deb
-    dest: /tmp/dropbox.deb
-
-- name: Install Dropbox
-  apt: deb=/tmp/dropbox.deb
-  become: true
-
-- name: copy Chrome .deb to target
-  copy:
-    src: google-chrome-stable_current_amd64.deb
-    dest: /tmp/chrome.deb
-
-- name: Install Chrome
-  apt: deb=/tmp/chrome.deb
-  become: true
+    src: financial.window.sh
+    dest: /home/{{ansible_user_id}}/.tmuxifier/layouts/financial.window.sh

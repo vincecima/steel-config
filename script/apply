@@ -3,4 +3,13 @@
 # Change current working directory to the directory contains this script
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 
+# Setup ssh-agent
+if ! pgrep -u $USER ssh-agent > /dev/null; then
+    ssh-agent > ~/.ssh-agent-info
+fi
+if [[ "$SSH_AGENT_PID" == "" ]]; then
+    eval $(<~/.ssh-agent-info)
+fi
+ssh-add -l >/dev/null || ssh-add
+
 ansible-playbook -i ../inventory/production ../site.yml --ask-become-pass

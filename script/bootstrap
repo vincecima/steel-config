@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
-update-locale LANG=en_US.UTF-8
+# Update and get needed packages
 apt-get update
+apt-get upgrade -y
 apt-get install -y ansible git
+
+# Fix perms on SSH keys
+chmod 0400 /home/vagrant/.ssh/id*

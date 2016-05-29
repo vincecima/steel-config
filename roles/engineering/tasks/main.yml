@@ -1,73 +1,37 @@
 ---
-- name: add Atom PPA
-  apt_repository: repo='ppa:webupd8team/atom'
+
+- name: add PPAs for packages
+  apt_repository: repo={{item}}
+  become: true
+  with_items:
+    - ppa:neovim-ppa/unstable
+
+- name: add Apt key for packagecloud
+  apt_key:
+    url: https://packagecloud.io/github/git-lfs/gpgkey
   become: true
 
-- name: add Gradle PPA
-  apt_repository: repo='ppa:cwchien/gradle'
-  become: true
-
-- name: add OpenJDK 8 PPA
-  apt_repository: repo='ppa:openjdk-r/ppa'
-  become: true
+- name: add Packagecloud repo
+  apt_repository:
+    repo: "{{item}}"
+  with_items:
+    - 'deb https://packagecloud.io/github/git-lfs/ubuntu/ xenial main'
+    - 'deb-src https://packagecloud.io/github/git-lfs/ubuntu/ xenial main'
 
 - name: install base development packages
   apt: name={{item}} update_cache=yes state=present
   become: true
   with_items:
-    - atom
     - curl
+    - docker.io
+    - docker-compose
     - git
+    - git-lfs
     - gradle
-    - openjdk-8-jdk
+    - neovim
+    - openjdk-8-jdk-headless
     - tar
     - unzip
-
-- name: Download IntelliJ IDEA
-  get_url:
-    url: https://f001.backblaze.com/file/com-vincecima/packages/ideaIU-2016.1.1.tar.gz
-    force: no
-    dest: /tmp/ideaIU.tar.gz
-
-- name: Ensure IDEA installation directory
-  file:
-    state: directory
-    mode: 0775
-    dest: /opt/intellij
-  become: true
-
-- name: Install IDEA
-  unarchive:
-    copy: no
-    src: /tmp/ideaIU.tar.gz
-    dest: /opt/intellij/
-  become: true
-
-- name: Checking for Docker
-  stat:
-    path: /usr/bin/docker
-  register: docker_stat
-
-- name: Install Docker
-  shell: wget -qO- https://get.docker.com/ | sh
-  when: not docker_stat.stat.exists
-  become: true
-
-- name: Checking for Docker Compose
-  stat:
-    path: /usr/local/bin/docker-compose
-  register: docker_compose_stat
-
-- name: Install Docker Compose
-  shell: curl -L https://github.com/docker/compose/releases/download/1.4.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-  become: yes
-  when: not docker_compose_stat.stat.exists
-
-- name: Make Docker Compose executable
-  file:
-    path: /usr/local/bin/docker-compose
-    mode: 0755
-  become: true
 
 - name: Ensure Projects directory
   file:
@@ -86,3 +50,31 @@
     - www.vincecima.com
     - how-much-time-left
     - application-config
+
+- name: Install rbenv
+  git:
+    dest: /home/{{ansible_user_id}}/.rbenv
+    repo: https://github.com/rbenv/rbenv.git
+    update: no
+
+- name: Install ruby-build
+  git:
+    dest: /home/{{ansible_user_id}}/.rbenv/plugins/ruby-build
+    repo: https://github.com/rbenv/ruby-build.git
+    update: no
+
+- name: Install ruby build environment
+  apt: name={{item}} update_cache=yes state=present
+  become: true
+  with_items:
+    - autoconf
+    - bison
+    - build-essential
+    - libssl-dev
+    - libyaml-dev
+    - libreadline6-dev
+    - zlib1g-dev
+    - libncurses5-dev
+    - libffi-dev
+    - libgdbm3
+    - libgdbm-dev

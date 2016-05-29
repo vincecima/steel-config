@@ -24,15 +24,32 @@
   apt_repository: repo='ppa:martin-frost/thoughtbot-rcm'
   become: true
 
-- name: install base packages
+- name: Install base packages
   apt: name={{item}} update_cache=yes state=present
   become: true
   with_items:
     - rcm
+    - tmux
 
 - name: Clone dotfiles repo
   git:
     dest: /home/{{ansible_user_id}}/.dotfiles
     repo: git@github.com:vincecima/dotfiles.git
     accept_hostkey: yes
+    update: no
+
+- name: Activate dotfiles
+  shell: rcup -f
+  changed_when: False
+
+- name: Install tmux-sensible
+  git:
+    dest: /home/{{ansible_user_id}}/.tmux-sensible
+    repo: https://github.com/tmux-plugins/tmux-sensible.git
+    update: no
+
+- name: Install Tmuxifier
+  git:
+    dest: /home/{{ansible_user_id}}/.tmuxifier
+    repo: https://github.com/jimeh/tmuxifier.git
     update: no
