@@ -35,6 +35,12 @@
     - rcm
     - tmux
 
+- name: Install tmux-sensible
+  git:
+    dest: "{{ ansible_env.HOME}}/.tmux-sensible"
+    repo: https://github.com/tmux-plugins/tmux-sensible.git
+    update: no
+
 - name: Install Tmuxifier
   git:
     dest: "{{ ansible_env.HOME}}/.tmuxifier"
