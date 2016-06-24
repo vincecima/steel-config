@@ -9,8 +9,8 @@ new_window "financial"
 # Split window into panes.
 split_v 50
 
-run_cmd "hledger networth" 1
-send_keys "hledger add" 0
+run_cmd "watch -t hledger networth" 0
+send_keys "hledger add" 1
 
 # Set active pane.
-select_pane 0
+select_pane 1

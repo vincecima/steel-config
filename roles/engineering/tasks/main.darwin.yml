@@ -1,0 +1,25 @@
+---
+- name: Install OSX packages
+  homebrew:
+    name: "{{item}}"
+  with_items:
+    - git
+    - git-lfs
+    - gradle
+    - rbenv
+    - ruby-build
+
+- name: Install OSX graphical applications
+  homebrew_cask:
+    name: "{{item}}"
+  with_items:
+    - vagrant
+    - java
+    - intellij-idea
+
+- name: Install OSX ruby build environment
+  homebrew:
+    name: "{{item}}"
+  with_items:
+    - libffi
+    - libyaml

@@ -1,0 +1,60 @@
+- name: add PPAs for packages
+  apt_repository: repo={{item}}
+  become: true
+  with_items:
+    - ppa:neovim-ppa/unstable
+
+- name: add Apt key for packagecloud
+  apt_key:
+    url: https://packagecloud.io/github/git-lfs/gpgkey
+  become: true
+
+- name: add Packagecloud repo
+  apt_repository:
+    repo: "{{item}}"
+  with_items:
+    - 'deb https://packagecloud.io/github/git-lfs/ubuntu/ xenial main'
+    - 'deb-src https://packagecloud.io/github/git-lfs/ubuntu/ xenial main'
+
+- name: install base development packages
+  apt: name={{item}} update_cache=yes state=present
+  become: true
+  with_items:
+    - curl
+    - docker.io
+    - docker-compose
+    - git
+    - git-lfs
+    - gradle
+    - neovim
+    - openjdk-8-jdk-headless
+    - tar
+    - unzip
+
+- name: Install rbenv
+  git:
+    dest: /home/{{ansible_user_id}}/.rbenv
+    repo: https://github.com/rbenv/rbenv.git
+    update: no
+
+- name: Install ruby-build
+  git:
+    dest: /home/{{ansible_user_id}}/.rbenv/plugins/ruby-build
+    repo: https://github.com/rbenv/ruby-build.git
+    update: no
+
+- name: Install ruby build environment
+  apt: name={{item}} update_cache=yes state=present
+  become: true
+  with_items:
+    - autoconf
+    - bison
+    - build-essential
+    - libssl-dev
+    - libyaml-dev
+    - libreadline6-dev
+    - zlib1g-dev
+    - libncurses5-dev
+    - libffi-dev
+    - libgdbm3
+    - libgdbm-dev
