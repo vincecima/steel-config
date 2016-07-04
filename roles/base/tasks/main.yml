@@ -34,6 +34,8 @@
   with_items:
     - rcm
     - tmux
+    - rbenv
+    - nodejs
 
 - name: Install tmux-sensible
   git:

@@ -15,23 +15,8 @@
   with_items:
     - hledger-networth
 
-- name: Install tmuxifier session data
-  copy:
-    src: "{{item}}"
-    dest: "{{ ansible_env.HOME}}/.tmuxifier/layouts/{{item}}"
-  with_items:
-    - financial.window.sh
-    - workstation.session.sh
+- include: roles/desktop/tasks/main.darwin.yml
+  when: ansible_os_family == "Darwin"
 
-- name: Install OSX graphical applications
-  homebrew_cask:
-    name: "{{item}}"
-  with_items:
-    - 1password
-    - atom
-    - dropbox
-    - google-chrome
-    - iterm2
-    - slack
-    - spectacle
-    - spotify
+- include: roles/desktop/tasks/main.ubuntu.yml
+  when: ansible_os_family == "Ubuntu"
