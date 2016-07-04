@@ -1,0 +1,8 @@
+---
+- name: Install tmuxifier session data
+  copy:
+    src: "{{item}}"
+    dest: "{{ ansible_env.HOME}}/.tmuxifier/layouts/{{item}}"
+  with_items:
+    - financial.window.sh
+    - workstation.session.sh
