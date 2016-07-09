@@ -28,6 +28,12 @@
   become: true
   when: ansible_os_family == "Ubuntu"
 
+- name: Add thoughtbot tap
+  homebrew_tap:
+    tap: thoughtbot/formulae
+  when: ansible_os_family == "Darwin"
+
+
 - name: Install base packages
   package: "{{item}}"
   become: true
