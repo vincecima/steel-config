@@ -1,12 +1,4 @@
 ---
-- name: Install desktop packages
-  package: "{{item}}"
-  become: true
-  with_items:
-    - hledger
-    - watch
-    - youtube-dl
-
 - name: Install hledger custom commands
   copy:
     src: "{{item}}"
