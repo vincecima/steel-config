@@ -1,9 +1,87 @@
 ---
-- include: roles/base/tasks/main.darwin.yml
+# Update package managers
+- name: Update apt
+  apt:
+    update_cache: true
+  when: ansible_os_family == "Ubuntu"
+
+- name: Update homebrew
+  homebrew:
+    update_homebrew: true
   when: ansible_os_family == "Darwin"
 
-- include: roles/base/tasks/main.ubuntu.yml
+# Make RCM available in package managers
+- name: Add rcm PPA
+  apt_repository:
+    repo: 'ppa:martin-frost/thoughtbot-rcm'
+  become: true
   when: ansible_os_family == "Ubuntu"
+
+- name: Add thoughtbot tap
+  homebrew_tap:
+    tap: thoughtbot/formulae
+  when: ansible_os_family == "Darwin"
+
+# Install packages
+- name: Install base packages
+  apt:
+    name: "{{item}}"
+  become: true
+  with_items:
+    - rcm
+    - tmux
+    - rbenv
+  when: ansible_os_family == "Ubuntu"
+
+- name: Install base packages
+  homebrew:
+    name: "{{item}}"
+  with_items:
+    - rcm
+    - rbenv
+    - nodejs
+  when: ansible_os_family == "Darwin"
+
+- name: Install tmux-sensible
+  git:
+    dest: "{{ ansible_env.HOME}}/.tmux-sensible"
+    repo: https://github.com/tmux-plugins/tmux-sensible.git
+    update: no
+  when: ansible_os_family == "Ubuntu"
+
+- name: Install Tmuxifier
+  git:
+    dest: "{{ ansible_env.HOME}}/.tmuxifier"
+    repo: https://github.com/jimeh/tmuxifier.git
+    update: no
+  when: ansible_os_family == "Ubuntu"
+
+
+# Install dotfiles
+- name: Clone dotfiles repo
+  git:
+    dest: "{{ ansible_env.HOME}}/.dotfiles"
+    repo: git@github.com:vincecima/dotfiles.git
+    update: no
+
+- name: Activate common dotfiles
+  shell: rcup -f
+  changed_when: False
+
+- name: Activate OSX dotfiles
+  shell: rcup -f -t osx
+  changed_when: False
+  when: ansible_os_family == "Darwin"
+
+- name: Activate Linux dotfiles
+  shell: rcup -f -t linux
+  changed_when: False
+  when: ansible_os_family == "Ubuntu"
+
+- name: Add a HOME/bin for commands
+  file:
+    path: "{{ ansible_env.HOME}}/bin"
+    state: directory
 
 - name: Fix permissions for all SSH keys
   file:
@@ -12,18 +90,3 @@
   with_items:
     - id_rsa
     - id_rsa.pub
-
-- name: Add a HOME/bin for commands
-  file:
-    path: "{{ ansible_env.HOME}}/bin"
-    state: directory
-
-- name: Clone dotfiles repo
-  git:
-    dest: "{{ ansible_env.HOME}}/.dotfiles"
-    repo: git@github.com:vincecima/dotfiles.git
-    update: no
-
-- name: Activate dotfiles
-  shell: rcup -f
-  changed_when: False
