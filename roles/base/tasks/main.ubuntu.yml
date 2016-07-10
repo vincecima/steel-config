@@ -1,0 +1,30 @@
+---
+- name: Update apt
+  apt:
+    update_cache: true
+
+- name: Add rcm PPA
+  apt_repository:
+    repo: 'ppa:martin-frost/thoughtbot-rcm'
+  become: true
+
+- name: Install base packages
+  apt:
+    name: "{{item}}"
+  become: true
+  with_items:
+    - rcm
+    - tmux
+    - rbenv
+
+- name: Install tmux-sensible
+  git:
+    dest: "{{ ansible_env.HOME}}/.tmux-sensible"
+    repo: https://github.com/tmux-plugins/tmux-sensible.git
+    update: no
+
+- name: Install Tmuxifier
+  git:
+    dest: "{{ ansible_env.HOME}}/.tmuxifier"
+    repo: https://github.com/jimeh/tmuxifier.git
+    update: no
