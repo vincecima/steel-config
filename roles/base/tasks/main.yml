@@ -1,12 +1,8 @@
 ---
-- name: Update homebrew
-  homebrew:
-    update_homebrew: true
+- include: roles/base/tasks/main.darwin.yml
   when: ansible_os_family == "Darwin"
 
-- name: Update apt
-  apt:
-    update_cache: true
+- include: roles/base/tasks/main.ubuntu.yml
   when: ansible_os_family == "Ubuntu"
 
 - name: Fix permissions for all SSH keys
@@ -21,39 +17,6 @@
   file:
     path: "{{ ansible_env.HOME}}/bin"
     state: directory
-
-- name: Add rcm PPA
-  apt_repository:
-    repo: 'ppa:martin-frost/thoughtbot-rcm'
-  become: true
-  when: ansible_os_family == "Ubuntu"
-
-- name: Add thoughtbot tap
-  homebrew_tap:
-    tap: thoughtbot/formulae
-  when: ansible_os_family == "Darwin"
-
-
-- name: Install base packages
-  package: "{{item}}"
-  become: true
-  with_items:
-    - rcm
-    - tmux
-    - rbenv
-    - nodejs
-
-- name: Install tmux-sensible
-  git:
-    dest: "{{ ansible_env.HOME}}/.tmux-sensible"
-    repo: https://github.com/tmux-plugins/tmux-sensible.git
-    update: no
-
-- name: Install Tmuxifier
-  git:
-    dest: "{{ ansible_env.HOME}}/.tmuxifier"
-    repo: https://github.com/jimeh/tmuxifier.git
-    update: no
 
 - name: Clone dotfiles repo
   git:
