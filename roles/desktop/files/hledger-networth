@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-hledger balance ^assets ^liab --depth 2 -M -H "$@"
+hledger balance ^assets ^liab --depth 2 -p "monthly from $(date -v-3m +%Y/%m)" -H "$@"
