@@ -1,4 +1,0 @@
-.vagrant
-keys/*
-!keys/.gitkeep
-*.retry

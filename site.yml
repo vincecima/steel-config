@@ -1,6 +1,0 @@
----
-- hosts: workstation
-  roles:
-  - base
-  - desktop
-  - engineering
